@@ -34,3 +34,4 @@ class ChipsOfGame(Properies):
 
 
 Chips_On_Game = ChipsOfGame(None,None,None)
+#Chips_On_Game(2,2,'White')
