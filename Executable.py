@@ -15,6 +15,7 @@ while boolean:
  # Messages.Next_Position()
   Actions['Panws'] 
   print('PR')
+  print('Hi')
  except:
   Messages.Next_Position()
 
