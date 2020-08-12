@@ -1,22 +1,17 @@
-from Chess_Board import Rules_ 
-from Chess_Board import Messages
-from Chess_Board import LETTERS_IN_BOARD
-from Chess_Board import VALUES_OF_THE_CHIPS
-from Chess_Chips import ChipsOfGame
-Chips = ChipsOfGame(2,2,'White')
-Messages.Play()
-Actions = {'Pawns': Chips.Movement_Front(Messages.entry_1)}
+from Chess_Board import rules
+from Chess_Board import messages
+from Chess_Board import letters_in_board
+from Chess_Board import values_of_chips
+from Chess_Chips import chips_on_game
+from Chess_Board import rule
+from Chess_Chips import actions
 boolean = True
+count = 0
 while boolean:
- try:
- # Rules_.Colors()
- # Rules_.Counter()
- # Messages.Play()
- # Messages.Next_Position()
-  Actions['Panws'] 
-  print('PR')
-  print('Hi')
- except:
-  Messages.Next_Position()
-
-
+    try:
+      print('correct')
+    
+    except:
+     messages.next_position()
+     print('Incorrect')
+ 
