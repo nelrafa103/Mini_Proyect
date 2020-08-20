@@ -1,17 +1,18 @@
-from Chess_Board import rules
-from Chess_Board import messages
+from Chess_Chips import play
 from Chess_Board import letters_in_board
 from Chess_Board import values_of_chips
 from Chess_Chips import chips_on_game
-from Chess_Board import rule
-from Chess_Chips import actions
 boolean = True
-count = 0
+play_1 = play()
+count = 1
 while boolean:
-    try:
-      print('correct')
+   try:
+     count = count + 1
+     print(count)
+     play_1.case_1(count)
     
-    except:
-     messages.next_position()
-     print('Incorrect')
- 
+   except:
+      print('Incorrect')
+    # break
+      continue
+  

@@ -10,10 +10,12 @@ values_of_chips = {'black': {'pawns':  [[2, 'A'], [2, 'B'], [2, 'C'], [2, 'D'], 
 
 class message():
     def play(self):
-        self.entry_1 = input("Enter the position of the chip you want to use:  ")
+        self.entry_1 = input(
+            "Enter the position of the chip you want to use:  ")
 
     def next_position(self):
         self.entry_2 = input("Enter the next position for you chip:  ")
+
 
 messages = message()
 
@@ -23,14 +25,6 @@ class properies(object):
         self.position_x = position_x
         self.position_y = position_y
         self.color = color
-
-    def walk_horizontal(self, value):
-        self.value = value
-        self.position_x = self.value + 1
-
-    def walk_vertical(self, value):
-        self.value = value
-        self.position_y = letters_in_board[self.value[1]]
 
     def remove_from_board(self):
         self.position_x = None
@@ -43,13 +37,12 @@ class properies(object):
             eaten.remove_from_board()
 
 
-class rules():
+class rules(message):
 
     def rules_of_eat(self, entry):
         self.entry = entry
         if int(self.entry[0]) * values_of_chips[self.entry[1]] > 64:
             messages.next_position()
-    # def Search_Of_Chips(self,value):
 
     def colors(self, counter):
         self.counter = counter
@@ -58,15 +51,51 @@ class rules():
         else:
             self.color = 'black'
 
-    def search_of_chips(self):
+    def search_of_chips(self, intro_value):
+        self.bulma = range(0, 10)
+        self.intro_value = intro_value
         for x in values_of_chips[self.color]:
             for y in values_of_chips[self.color][x]:
-                if y[0] == int(messages.entry_1[0]) and y[1] == messages.entry_1[1]:
+                if y[0] == int(self.intro_value[0]) and y[1] == self.intro_value[1]:
                     self.chip_position = y
                     self.chip_type = x
                     return 'Its ok'
         else:
             return 'It is not ok'
 
+    def rules_for_chips(self, value_x_i, value_x_l, value_y_i, value_y_l):
+        if value_x_i in value_x_l and value_y_i in value_x_l:
+            return 'Yes!'
+        else:
+            return 'No!'
 
-rule = rules()
+    def movements_chips(self):
+        if self.chip_type == 'pawns' or 'king':
+            value = range(self.chip_position[0], auxiliar.count)
+
+        elif self.chip_type != 'pawns' or rule.chip_type != 'king':
+            value = range(0, 8)
+
+    def dont_eat_your_team(self, values):
+        self.values = values
+        self.search_of_chips(self.values)
+
+
+rule = rules
+
+
+class auxiliar_class(rule):
+    def operating_system(self):
+        if os.name == "posix":
+            os.system('clear')
+        else:
+            os.system('cls')
+
+    def auxiliar_function(self):
+        if self.color == 'black':
+            self.count = self.chip_position[0] + 1
+        else:
+            self.count = self.chip_position[0] - 1
+
+
+auxiliar = auxiliar_class
