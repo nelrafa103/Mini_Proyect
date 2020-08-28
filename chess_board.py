@@ -32,15 +32,6 @@ class Properies(object):
         self.position_y = position_y
         self.color = color
 
-    def remove_from_board(self):
-        self.position_x = None
-        self.position_y = None
-
-    def eat_in_chess(self, eaten, attaker):
-        self.eaten = eaten
-        self.attaker = attaker
-        eaten.remove_from_board()
-
 
 class Rules(Message):
 
@@ -52,37 +43,50 @@ class Rules(Message):
             self.color = 'black'
 
     def search_of_chips(self, intro_value):
-        self.bulma = range(0, 10)
         self.intro_value = intro_value
-        for x in values_of_chips[self.color]:
-            for y in values_of_chips[self.color][x]:
-                if y[0] == int(self.intro_value[0]) and y[1] == self.intro_value[1]:
-                    self.chip_position = y
-                    self.chip_type = x
-                    return True
+        self.t = 0
+        if (int(self.entry_1[0]) <= 8 and int(self.entry_1[0]) > 0) and self.entry_1[1] in letters_in_board:
+            for x in values_of_chips[self.color]:
+                self.t = 0
+                for y in values_of_chips[self.color][x]:
+                    if y[0] == int(self.intro_value[0]) and y[1] == self.intro_value[1]:
+                        self.chip_position = y
+                        self.chip_type = x
+                        return True
+                    else:
+                        self.t += 1
+            else:
+                return False
         else:
-            return False
+            print("There is not a chip with that position")
 
     def rules_for_chips(self, value_1, value_2):
-        print(value_1, value_2)
+
+        self.value_1, self.value_2 = value_1, value_2
+        print(self.value_1, self.value_2, self.addition, self.chip_type)
         if self.entry_1[0] != self.entry_2[0] or value_1[1] != value_2[1]:
-         if int(self.entry_2[0]) in range(value_1[0], value_2[0]) and letters_in_board[value_1[1]] in range(letters_in_board[value_1[1]], value_2[1]):
-            # if self.chip_type == 'bishop' or self.chip_type == 'dame':
-            return 'Yes!'
-           
+          
+            if int(self.entry_2[0]) in range(int(self.value_1[0]), int(self.value_2[0]), self.addition) and letters_in_board[value_1[1]] in range(letters_in_board[self.value_1[1]], self.value_2[1], self.addition):
+                # if self.chip_type == 'bishop' or self.chip_type == 'dame':
+                return 'Yes!'
+            else:
+                print("La pampara")
+                return "There something wrong", self.addition
         else:
             return 'No! you can do this'
 
     def movements_chips(self):
         if self.chip_type == 'pawns':
-            self.value_range = [self.chip_position[0] + self.count,letters_in_board[self.entry_2[1]] + 1 ]
+            self.value_range = [self.chip_position[0] +
+                                self.count, letters_in_board[self.entry_2[1]] + 1]
 
         elif self.chip_type == 'king':
-            self.value_range = "SomeThing"
+         #   self.value_range = [self.chip_position[0] + self.count,
+            #       letters_in_board[self.entry_2[1]] + self.count]  # Aqui va un valor ja
+            print("hola")
 
         else:
-            # elif self.chip_type != 'pawns' or rule.chip_type != 'king':
-            value_range = 8
+            self.value_range = [0, 8]
 
     def dont_eat_your_team(self, values):
         self.values = values
@@ -90,13 +94,21 @@ class Rules(Message):
             print("NO!")
 
     def auxiliar_function(self):
+
         if self.color == 'black':
+            self.addition = 1
             self.count = 2
         else:
-            self.count = - 2
+            self.addition = -1
+            self.count = -2
 
     def dont_go_through_tiles(self):
         self.search_of_chips()
+
+    def finish_game(self):
+        self.colors(self.counter + 1)
+        if values_of_chips[self.color]["king"][0] == [None, None]:
+            return "The game had finish"
 
 
 rule = Rules()
@@ -112,8 +124,7 @@ class AuxiliarClass(Rules):
 
     def status(self):
         print(values_of_chips)
+        print("Revision")
 
 
 auxiliar = AuxiliarClass()
-# auxiliar.auxiliar_function()
-# print(auxiliar.count)
