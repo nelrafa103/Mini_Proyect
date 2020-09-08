@@ -7,10 +7,6 @@ boolean = True
 play_1 = Play()
 count = 1
 while boolean:
-  try:
-     play_1.case_1(count)
-     count += 1
-     print("It is ok")
-  except:
-      continue
-#
+  
+        play_1.case_1(count)
+        count += 1
