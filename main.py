@@ -7,6 +7,10 @@ boolean = True
 play_1 = Play()
 count = 1
 while boolean:
-  
-        play_1.case_1(count)
-        count += 1
+ #  try:
+      
+      play_1.play_case_1(count)
+      #print(5%10)
+      count += 1
+   #except: 
+   # continue
