@@ -70,8 +70,7 @@ class Rules(Message):
 
     def rules_for_chips(self, value_1, value_2):
         self.value_1, self.value_2 = value_1, value_2
-        # Begin with logic
-        print(self.chip_type == 'pawns' and (int(self.entry_2[0]) - int(self.entry_1[0])) * self.case_1 == (letters_in_board[self.entry_2[1]] - letters_in_board[self.entry_1[1]]) * self.case_2 )# and self.attack() == True)
+        self.result = self.attack()
         if int(self.entry_2[0]) in range(1, 9) and self.entry_2[1] in letters_in_board or self.entry_2[1] == "I":
             if int(self.entry_1[0]) != int(self.entry_2[0]) or letters_in_board[self.entry_1[1]] != letters_in_board[self.entry_2[1]]:
                 if self.chip_type == "towers" and self.entry_1[0] != self.entry_2[0] and self.entry_1[1] != self.entry_2[1]:
@@ -86,7 +85,7 @@ class Rules(Message):
                         return
                 elif self.chip_type == "horses":
                     return
-                if self.chip_type == 'pawns' and (int(self.entry_2[0]) - int(self.entry_1[0])) * self.case_1 == (letters_in_board[self.entry_2[1]] - letters_in_board[self.entry_1[1]]) * self.case_2 and self.attack() == True:
+                if self.chip_type == 'pawns' and (int(self.entry_2[0]) - int(self.entry_1[0])) * self.case_1 == (letters_in_board[self.entry_2[1]] - letters_in_board[self.entry_1[1]]) * self.case_2 and self.result == True:
                     print("In process")
                     if (letters_in_board[self.entry_2[1]] - letters_in_board[self.entry_1[1]]) * self.case_2 == 1 and (int(self.entry_2[0]) - int(self.entry_1[0])) * self.case_1 == 1:
                         return True

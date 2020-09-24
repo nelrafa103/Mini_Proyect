@@ -34,11 +34,9 @@ class Play(ChipsOfGame):
         self.auxiliar_function() 
         self.movements_chips()
         self.postives_numbers()
-        self.dont_eat_your_team() 
         self.dont_go_through_tiles()
-        if self.calleds() == True:
+        if self.calleds() == True and self.dont_eat_your_team() == True:
             self.update_chip_position(self.entry_2)
             self.finish_game()
-            self.attack()
         else:
          print(values_of_chips)

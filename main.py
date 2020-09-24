@@ -7,10 +7,9 @@ boolean = True
 play_1 = Play()
 count = 1
 while boolean:
- #  try:
-      
+   try:
+      turtle.pendown(20)
       play_1.play_case_1(count)
-      #print(5%10)
       count += 1
-   #except: 
-   # continue
+   except: 
+    continue
