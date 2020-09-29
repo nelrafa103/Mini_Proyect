@@ -5,8 +5,8 @@ import turtle
 
 count = 1
 while True:
-   #try:
+   try:
       players.play_case_1(count)
       count += 1
- #  except: 
-   # continue
+   except: 
+    continue

@@ -7,7 +7,6 @@ values_of_chips = {'black': {'pawns':  [[2, 'A'], [2, 'B'], [2, 'C'], [2, 'D'], 
 
                    'white': {'pawns':  [[7, 'A'], [7, 'B'], [7, 'C'],  [7, 'D'],  [7, 'E'],  [7, 'F'],  [7, 'G'], [7, 'H']], 'bishops':  [[8, 'C'],  [8, 'F']], 'towers':  [[8, 'A'],  [8, 'H']], 'horses':   [[8, 'B'],  [8, 'G']], 'king':  [[8, 'E']], 'dame':  [[8, 'D']]}}
 
-
 class Message():
 
     def status(self):
@@ -29,8 +28,8 @@ class Message():
             self.status()
 
     def error_case_1(self):
-        return "You cant do this"
-
+        print("You cant do this")
+        return 'error' + 1 
 
 messages = Message()
 
@@ -65,7 +64,8 @@ class Board():
                         return True
                     else:
                         self.indicator += 1
-        return
+        else:
+         return messages.error_case_1(),
 
     def finish_game(self):
         self.colors(self.counter + 1)
@@ -74,9 +74,8 @@ class Board():
             return False
 
     def dont_eat_your_team(self):
-        if self.search_of_chips(messages.entry_2) == True:
-            print(messages.entry_1())
-            return
+        if self.search_of_chips(messages.entry_2) == True and messages.entry_1[0] != messages.entry_2[0] and messages.entry_1[1] != messages.entry_2[1]:
+            return messages.error_case_1()
         else:
             return True
 
@@ -92,7 +91,6 @@ board = Board()
 
 
 class Chips(Characteristics):
-
     def attack(self):
         board.colors(board.counter + 1)
         if board.search_of_chips(messages.entry_2) == True:
@@ -111,31 +109,34 @@ class Chips(Characteristics):
                 self.addition_2 = -1
             self.count = -2
 
-    def rules_for_chips(self, value_1, value_2):
+    def rules_for_movements(self, value_1, value_2):
         self.value_1, self.value_2 = value_1, value_2
         self.result = self.attack()
         if int(messages.entry_2[0]) in range(1, 9) and messages.entry_2[1] in letters_in_board or messages.entry_2[1] == "I":
             if int(messages.entry_1[0]) != int(messages.entry_2[0]) or letters_in_board[messages.entry_1[1]] != letters_in_board[messages.entry_2[1]]:
                 if self.type == "towers" and messages.entry_1[0] != messages.entry_2[0] and messages.entry_1[1] != messages.entry_2[1]:
-                    return
+                    return  messages.error_case_1()
                 if self.type == "bishops" and (int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1 != (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2:
-                    return
+            
+                    return  messages.error_case_1()
                 if self.type != "horses" and int(messages.entry_1[0]) != int(messages.entry_2[0]) and letters_in_board[messages.entry_1[1]] != letters_in_board[messages.entry_2[1]] and (int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1 != (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2:
-                    return
+                  
+                    return  messages.error_case_1()
                 if self.type == "horses" and ((int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1) + (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2 == 3:
                     if (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2 >= 3 or (int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1 >= 3:
-                        return
+                        return  messages.error_case_1()
                 elif self.type == "horses":
-                    return
+                    return  messages.error_case_1()
                 if self.type == 'pawns' and (int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1 == (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2 and self.result == True:
                     if (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2 == 1 and (int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1 == 1:
                         return True
                 if int(messages.entry_2[0]) in range(int(self.value_1[0]), int(self.value_2[0]), self.addition_2) and letters_in_board[messages.entry_2[1]] in range(letters_in_board[self.value_1[1]], self.value_2[1]):
                     return True
                 else:
-                    return #messages.error_case_1()
+                
+                    return messages.error_case_1()
             else:
-                return
+                return  messages.error_case_1()
 
     def movements_chips(self):
         if self.type == 'pawns':
@@ -149,15 +150,15 @@ class Chips(Characteristics):
         else:
             self.value_range = [9, letters_in_board["I"]]
 
-    def calleds(self):
+    def movements(self):
         self.auxiliar_function()
         self.movements_chips()
         auxiliar.postives_numbers()
         board.dont_eat_your_team()
         if self.type == "pawns" or self.type == "king":
-            return self.rules_for_chips(messages.entry_1, self.value_range)
+            return self.rules_for_movements(messages.entry_1, self.value_range)
         else:
-            return self.rules_for_chips([1, "A"], self.value_range)
+            return self.rules_for_movements([1, "A"], self.value_range)
 
     def eating(self):
         if self.result == True:
@@ -171,8 +172,7 @@ class Chips(Characteristics):
             for x in values_of_chips[self.color]:
                 for y in values_of_chips[self.color][x]:
                     if y[0] in range(int(messages.entry_1[0]), int(messages.entry_2[0]) + auxiliar.add_1, self.addition) and letters_in_board[y[1]] in range(letters_in_board[messages.entry_1[1]], letters_in_board[messages.entry_2[1]] + auxiliar.add_2) and self.clone != y:
-                        print("you cant do that", self.clone, messages.entry_1)
-                        return
+                        return  messages.error_case_1()
         return True
 
 
