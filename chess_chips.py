@@ -16,11 +16,6 @@ class ChipsOfGame(AuxiliarClass):
                                                     ][0], values_of_chips[self.color][self.chip_type][self.indicator][1] = int(self.new_value[0]), self.new_value[1]
     # i dont know how to named
 
-    def calleds(self):
-        if self.chip_type == "pawns" or self.chip_type == "king":
-            return self.rules_for_chips(self.entry_1, self.value_range)
-        else:
-            return self.rules_for_chips([1,"A"],self.value_range)
 #This class contain the default procedement
 
 class Play(ChipsOfGame):
