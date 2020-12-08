@@ -76,8 +76,7 @@ class Message:
                 or int(self.entry_1[0]) < 1
                 or len(self.entry_1) != 2
                 or self.entry_1[1] not in letters_in_board
-            ):6.000000        Monto:  56.000000
-Ciudad con menor venta: Id:     1.00000
+            ):
                 print("Try better this time ")
                 return self.play()
             else:
