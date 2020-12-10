@@ -1,207 +1,324 @@
 import os
 
-letters_in_board = {'A': 1, 'B': 2, 'C': 3,
-                    'D': 4, 'E': 5, 'F': 6, 'G': 7, 'H': 8, "I": 9}
+letters_in_board = {
+    "A": 1,
+    "B": 2,
+    "C": 3,
+    "D": 4,
+    "E": 5,
+    "F": 6,
+    "G": 7,
+    "H": 8,
+}
 
-values_of_chips = {'black': {'pawns':  [[2, 'A'], [2, 'B'], [2, 'C'], [2, 'D'], [2, 'E'], [2, 'F'], [2, 'G'], [2, 'H']], 'bishops':  [[1, 'C'], [1, 'F']], 'towers':  [[1, 'A'], [1, 'H']], 'horses':  [[1, 'B'], [2, 'G']], 'king':  [[1, 'E']], 'dame': [[1, 'D']]},
+all_positions_of_pieces = {
+    "black": {
+        "pawns": [
+            [2, "A"],
+            [2, "B"],
+            [2, "C"],
+            [2, "D"],
+            [2, "E"],
+            [2, "F"],
+            [2, "G"],
+            [2, "H"],
+        ],
+        "bishops": [[1, "C"], [1, "F"]],
+        "towers": [[1, "A"], [1, "H"]],
+        "horses": [[1, "B"], [2, "G"]],
+        "king": [[1, "E"]],
+        "dame": [[1, "D"]],
+    },
+    "white": {
+        "pawns": [
+            [7, "A"],
+            [7, "B"],
+            [7, "C"],
+            [7, "D"],
+            [7, "E"],
+            [7, "F"],
+            [7, "G"],
+            [7, "H"],
+        ],
+        "bishops": [[8, "C"], [8, "F"]],
+        "towers": [[8, "A"], [8, "H"]],
+        "horses": [[8, "B"], [8, "G"]],
+        "king": [[8, "E"]],
+        "dame": [[8, "D"]],
+    },
+}
 
-                   'white': {'pawns':  [[7, 'A'], [7, 'B'], [7, 'C'],  [7, 'D'],  [7, 'E'],  [7, 'F'],  [7, 'G'], [7, 'H']], 'bishops':  [[8, 'C'],  [8, 'F']], 'towers':  [[8, 'A'],  [8, 'H']], 'horses':   [[8, 'B'],  [8, 'G']], 'king':  [[8, 'E']], 'dame':  [[8, 'D']]}}
 
-class Message():
+class Properies(object):
+    def __init__(self, position, color, piece_types):
+        self.pieces_position = position
+        self.color = color
+        self.piece_types = piece_types
 
-    def status(self):
-        print(values_of_chips)
-        print("Revision")
+
+class Message:
+
+    # All the thing with relation with the terminal
+
+    def operating_system(self):
+
+        if self.counter % 2 == 0:
+            if os.name == "posix":
+                os.system("clear")
+            else:
+                os.system("cls")
 
     def play(self):
-        #print('It is your turn, ' + board.color)
-        self.entry_1 = input(
-            "Enter the position of the chip you want to use:  ")
-
-        if self.entry_1 == "status":
-            self.status()
+        self.entry_1 = input("Enter the position of the chip you want to use:  ")
+        try:
+            if self.entry_1 == "status":
+                print(all_positions_of_pieces)
+            if (
+                int(self.entry_1[0]) > 8
+                or int(self.entry_1[0]) < 1
+                or len(self.entry_1) != 2
+                or self.entry_1[1] not in letters_in_board
+            ):
+                print("Try better this time ")
+                return self.play()
+            else:
+                return True
+        except:
+            return self.play()
 
     def next_position(self):
         self.entry_2 = input("Enter the next position for you chip:  ")
+        try:
+            if self.entry_2 == "status":
+                print(all_positions_of_pieces)
+            if (
+                int(self.entry_2[0]) > 8
+                or int(self.entry_2[0]) < 1
+                or len(self.entry_2) != 2
+                or self.entry_2[1] not in letters_in_board
+            ):
+                print("Try better this time ")
+                return self.next_position()
+            else:
+                return True
+        except:
+            return self.next_position()
 
-        if self.entry_2 == "status":
-            self.status()
+    def menu(self):
+        self.play()
+        self.next_position()
 
-    def error_case_1(self):
-        print("You cant do this")
-        return 'error' + 1 
 
 messages = Message()
+# messages.menu()
 
 
-class Characteristics(object):
-    def __init__(self, position_x, position_y, color, types):
-        self.position_x = position_x
-        self.position_y = position_y
-        self.color = color
-        self.type = types
-
-
-class Board():
+class Board:
+    def converter_to_list(self, entry_1, entry_2):
+        self.entry_1, self.entry_2 = entry_1, entry_2
+        self.actual_position = [int(self.entry_1[0]), self.entry_1[1]]
+        self.next_position = [int(self.entry_2[0]), self.entry_2[1]]
+        return self.next_position
 
     def colors(self, counter):
         self.counter = counter
         if self.counter % 2 != 0:
-            self.color = 'white'
+            self.color = "white"
         else:
-            self.color = 'black'
+            self.color = "black"
 
-    def search_of_chips(self, intro_value):
-        self.intro_value = intro_value
-        self.indicator = 0
-        if int(messages.entry_1[0]) in range(1, 9) and messages.entry_1[1] in letters_in_board:
-            for x in values_of_chips[self.color]:
-                self.indicator = 0
-                for y in values_of_chips[self.color][x]:
-                    if y[0] == int(self.intro_value[0]) and y[1] == self.intro_value[1]:
-                        self.chip_position = y
-                        self.chip_type = x
-                        return True
-                    else:
-                        self.indicator += 1
-        else:
-         return messages.error_case_1(),
-
-    def finish_game(self):
-        self.colors(self.counter + 1)
-        if values_of_chips[self.color]["king"][0] == [None, None]:
-            print("The game had finish")
-            return False
-
-    def dont_eat_your_team(self):
-        if self.search_of_chips(messages.entry_2) == True and messages.entry_1[0] != messages.entry_2[0] and messages.entry_1[1] != messages.entry_2[1]:
-            return messages.error_case_1()
-        else:
-            return True
-
-    def update_chip_position(self, new_value):
-         self.new_value = new_value
-         self.colors(self.counter - 1)
-         self.search_of_chips(messages.entry_1)
-         values_of_chips[self.color][self.chip_type][self.indicator
-                                                    ][0], values_of_chips[self.color][self.chip_type][self.indicator][1] = int(self.new_value[0]), self.new_value[1]
-
-    
-board = Board()
-
-
-class Chips(Characteristics):
-    def attack(self):
-        board.colors(board.counter + 1)
-        if board.search_of_chips(messages.entry_2) == True:
-            return True
-
-    def auxiliar_function(self):
-
-        if board.color == 'black':
-            self.addition = 1
-            self.addition_2 = 1
-            self.count = 2
-        else:
-            self.addition = -1
-            self.addition_2 = 1
-            if board.chip_type == "pawns" or board.chip_type == "king":
-                self.addition_2 = -1
-            self.count = -2
-
-    def rules_for_movements(self, value_1, value_2):
-        self.value_1, self.value_2 = value_1, value_2
-        self.result = self.attack()
-        if int(messages.entry_2[0]) in range(1, 9) and messages.entry_2[1] in letters_in_board or messages.entry_2[1] == "I":
-            if int(messages.entry_1[0]) != int(messages.entry_2[0]) or letters_in_board[messages.entry_1[1]] != letters_in_board[messages.entry_2[1]]:
-                if self.type == "towers" and messages.entry_1[0] != messages.entry_2[0] and messages.entry_1[1] != messages.entry_2[1]:
-                    return  messages.error_case_1()
-                if self.type == "bishops" and (int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1 != (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2:
-            
-                    return  messages.error_case_1()
-                if self.type != "horses" and int(messages.entry_1[0]) != int(messages.entry_2[0]) and letters_in_board[messages.entry_1[1]] != letters_in_board[messages.entry_2[1]] and (int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1 != (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2:
-                  
-                    return  messages.error_case_1()
-                if self.type == "horses" and ((int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1) + (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2 == 3:
-                    if (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2 >= 3 or (int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1 >= 3:
-                        return  messages.error_case_1()
-                elif self.type == "horses":
-                    return  messages.error_case_1()
-                if self.type == 'pawns' and (int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1 == (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2 and self.result == True:
-                    if (letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]]) * auxiliar.case_2 == 1 and (int(messages.entry_2[0]) - int(messages.entry_1[0])) * auxiliar.case_1 == 1:
-                        return True
-                if int(messages.entry_2[0]) in range(int(self.value_1[0]), int(self.value_2[0]), self.addition_2) and letters_in_board[messages.entry_2[1]] in range(letters_in_board[self.value_1[1]], self.value_2[1]):
+    def search_of_pieces(self, intro_value, where_to_search, piece_color):
+        self.index_position = 0
+        self.intro_value, self.indicator, self.where_to_search, self.piece_color = (
+            intro_value,
+            0,
+            where_to_search,
+            piece_color,
+        )
+        for piece_type in where_to_search[self.piece_color]:
+            self.indicator = 0
+            for y in where_to_search[self.piece_color][piece_type]:
+                if y[0] == self.intro_value[0] and y[1] == self.intro_value[1]:
+                    self.piece_position, self.pieces_type = intro_value, piece_type
+                    # print(board.pieces_type)
                     return True
                 else:
-                
-                    return messages.error_case_1()
-            else:
-                return  messages.error_case_1()
+                    self.indicator += 1
+        return
 
-    def movements_chips(self):
-        if self.type == 'pawns':
-            self.value_range = [self.position_x +
-                                self.count, letters_in_board[messages.entry_1[1]] + 1]
+    def board_behavior(self, arg_1, arg_2):
+        self.arg_search1, self.arg_colors1 = arg_1, arg_2
+        self.converter_to_list(messages.entry_1, messages.entry_2)
+        self.colors(self.arg_colors1)
+        self.search_of_pieces(self.actual_position, self.arg_search1, self.color)
 
-        elif self.type == 'king':
-            self.value_range = [self.position_x +
-                                self.count, letters_in_board[messages.entry_2[1]] + self.count]
+    #  print("Funcioando")
+
+
+board = Board()
+# board.board_behavior(all_positions_of_pieces, 1)
+
+
+class Pieces(Properies):
+    def opposite_colors(self):
+        if self.color == "black":
+            self.pawn = 1
+            self.opposite_color = "white"
 
         else:
-            self.value_range = [9, letters_in_board["I"]]
+            self.pawn = -1
+            self.opposite_color = "black"
+        self.piece_type_selected = board.pieces_type
 
-    def movements(self):
-        self.auxiliar_function()
-        self.movements_chips()
-        auxiliar.postives_numbers()
-        board.dont_eat_your_team()
-        if self.type == "pawns" or self.type == "king":
-            return self.rules_for_movements(messages.entry_1, self.value_range)
+    # print("Funcioando")
+
+    def dont_eat_your_team(self):
+        if (
+            board.search_of_pieces(
+                self.pieces_position, all_positions_of_pieces, self.color
+            )
+            == True
+        ):
+            return False
         else:
-            return self.rules_for_movements([1, "A"], self.value_range)
+            return True
 
-    def eating(self):
-        if self.result == True:
-            values_of_chips[board.color][self.type][board.indicator] = [
-                None, None]
+    def attack_of_pieces(self):
 
-    def dont_go_through_tiles(self):
-        self.clone = list(messages.entry_1)
-        self.clone[0] = int(self.clone[0])
-        if self.type != "horses":
-            for x in values_of_chips[self.color]:
-                for y in values_of_chips[self.color][x]:
-                    if y[0] in range(int(messages.entry_1[0]), int(messages.entry_2[0]) + auxiliar.add_1, self.addition) and letters_in_board[y[1]] in range(letters_in_board[messages.entry_1[1]], letters_in_board[messages.entry_2[1]] + auxiliar.add_2) and self.clone != y:
-                        return  messages.error_case_1()
-        return True
+        if (
+            board.search_of_pieces(
+                self.pieces_position, all_positions_of_pieces, self.opposite_color
+            )
+            == True
+        ):
+            all_positions_of_pieces[self.opposite_color][board.pieces_type][
+                board.indicator
+            ] = [
+                None,
+                None,
+            ]
+        return
 
+    def movement_of_pieces(self):
+        def vertical_movement(limit, i, reverse):
+            while limit > 0:
+                if reverse == True:
+                    if [
+                        board.actual_position[0] - i,
+                        board.actual_position[1],
+                    ] == self.pieces_position:
+                        return True
+                if [
+                    board.actual_position[0] + i,
+                    board.actual_position[1],
+                ] == self.pieces_position:
+                    return True
+                i += 1
+                limit -= 1
 
-class AuxiliarClass():
-    def operating_system(self):
-        if board.counter % 5 == 0:
-            if os.name == "posix":
-                os.system('clear')
-            else:
-                os.system('cls')
+        def horizonal_movement(limit, i, reverse):
+            while limit > 0:
+                if reverse == True:
+                    if (
+                        letters_in_board[board.actual_position[1]] - i
+                        == letters_in_board[self.pieces_position[1]]
+                        and self.pieces_position[0] == board.actual_position[0]
+                    ):
+                        return True
+                if (
+                    letters_in_board[board.actual_position[1]] + i
+                    == letters_in_board[self.pieces_position[1]]
+                    and self.pieces_position[0] == board.actual_position[0]
+                ):
+                    return True
+                i += 1
+                limit -= 1
 
-    def postives_numbers(self):
-        if (int(messages.entry_2[0]) - int(messages.entry_1[0])) < 0:
-            self.case_1 = -1
-        else:
-            self.case_1 = 1
-        if letters_in_board[messages.entry_2[1]] - letters_in_board[messages.entry_1[1]] < 0:
-            self.case_2 = -1
-        else:
-            self.case_2 = 1
+        def lineal_movement(limit, i, reverse):
+            while limit > 0:
+                if reverse == True:
+                    if (
+                        board.actual_position[0] - i == self.pieces_position[0]
+                        and letters_in_board[board.actual_position[1]] - i
+                        == letters_in_board[self.pieces_position[1]]
+                    ):
+                        return True
+                    if (
+                        board.actual_position[0] - i == self.pieces_position[0]
+                        and letters_in_board[board.actual_position[1]] + i
+                        == letters_in_board[self.pieces_position[1]]
+                    ):
+                        return True
+                if (
+                    board.actual_position[0] + i == self.pieces_position[0]
+                    and letters_in_board[board.actual_position[1]] + i
+                    == letters_in_board[self.pieces_position[1]]
+                ):
+                    return True
+                if (
+                    board.actual_position[0] + i == self.pieces_position[0]
+                    and letters_in_board[board.actual_position[1]] - i
+                    == letters_in_board[self.pieces_position[1]]
+                ):
+                    return True
+                """ print(
+                    board.actual_position[0] + i,
+                    self.pieces_position[0],
+                    letters_in_board[board.actual_position[1]] + i,
+                    letters_in_board[self.pieces_position[1]],
+                )"""
+                i += 1
+                limit -= 1
 
-        if messages.entry_1[0] == messages.entry_2[0]:
-            self.add_1 = 1
-        else:
-            self.add_1 = 0
-        if messages.entry_1[1] == messages.entry_2[1]:
-            self.add_2 = 1
-        else:
-            self.add_2 = 0
+        def horse_movement():
+            value_1 = board.actual_position[0] - self.pieces_position[0]
+            if value_1 < 0:
+                value_1 *= -1
+            value_2 = (
+                letters_in_board[board.actual_position[1]]
+                - letters_in_board[self.pieces_position[1]]
+            )
+            if value_2 < 0:
+                value_2 *= -1
+            #  print(value_1, value_2)
+            if value_1 == 1 and value_2 == 2:
+                return True
+            elif value_1 == 2 and value_2 == 1:
+                return True
 
+        # print(self.pieces_position[0] % board.actual_position[0],letters_in_board [self.pieces_position[1]] % letters_in_board[board.actual_position[1]] )
+        valid_movements = {
+            "pawns": [
+                vertical_movement(1, self.pawn, False),
+                lineal_movement(1, self.pawn, False),
+            ],
+            "dame": [
+                vertical_movement(8, 1, True),
+                horizonal_movement(8, 1, True),
+                lineal_movement(8, 1, True),
+            ],
+            "king": [
+                vertical_movement(1, 1, True),
+                horizonal_movement(1, 1, True),
+                lineal_movement(1, 1, True),
+            ],
+            "horses": [horse_movement()],
+            "towers": [horizonal_movement(8, 1, True), vertical_movement(8, 1, True)],
+            "bishops": [lineal_movement(8, 1, True)],
+        }
+        for check in valid_movements[self.piece_type_selected]:
+            if check == True and self.dont_eat_your_team() != False:
+                all_positions_of_pieces[self.color][self.piece_type_selected][
+                    board.indicator - 1
+                ] = self.pieces_position
+                return True
+        # print("Try again,please")
 
-auxiliar = AuxiliarClass()
+    #  print(valid_movements[self.piece_types])
+
+    def pieces_behavior(self):
+        self.opposite_colors()
+        if self.movement_of_pieces() == True:
+         self.attack_of_pieces()
+         print("Te lo comiste")
+    # return
