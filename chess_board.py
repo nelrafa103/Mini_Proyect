@@ -140,7 +140,6 @@ class Board:
             for y in where_to_search[self.piece_color][piece_type]:
                 if y[0] == self.intro_value[0] and y[1] == self.intro_value[1]:
                     self.piece_position, self.pieces_type = intro_value, piece_type
-                    # print(board.pieces_type)
                     return True
                 else:
                     self.indicator += 1
@@ -170,8 +169,6 @@ class Pieces(Properies):
             self.opposite_color = "black"
         self.piece_type_selected = board.pieces_type
 
-    # print("Funcioando")
-
     def dont_eat_your_team(self):
         if (
             board.search_of_pieces(
@@ -199,126 +196,192 @@ class Pieces(Properies):
             ]
         return
 
-    def movement_of_pieces(self):
-        def vertical_movement(limit, i, reverse):
-            while limit > 0:
-                if reverse == True:
-                    if [
-                        board.actual_position[0] - i,
-                        board.actual_position[1],
-                    ] == self.pieces_position:
-                        return True
+    def vertical_movement(self, limit, i, reverse):
+        while limit > 0:
+            if reverse == True:
+
                 if [
-                    board.actual_position[0] + i,
+                    board.actual_position[0] - i,
                     board.actual_position[1],
                 ] == self.pieces_position:
                     return True
-                i += 1
-                limit -= 1
+            if [
+                board.actual_position[0] + i,
+                board.actual_position[1],
+            ] == self.pieces_position:
+                return True
 
-        def horizonal_movement(limit, i, reverse):
-            while limit > 0:
-                if reverse == True:
-                    if (
-                        letters_in_board[board.actual_position[1]] - i
-                        == letters_in_board[self.pieces_position[1]]
-                        and self.pieces_position[0] == board.actual_position[0]
-                    ):
-                        return True
+            i += 1
+            limit -= 1
+
+    def horizonal_movement(self, limit, i, reverse):
+        while limit > 0:
+            if reverse == True:
+
                 if (
-                    letters_in_board[board.actual_position[1]] + i
+                    letters_in_board[board.actual_position[1]] - i
                     == letters_in_board[self.pieces_position[1]]
                     and self.pieces_position[0] == board.actual_position[0]
                 ):
                     return True
-                i += 1
-                limit -= 1
 
-        def lineal_movement(limit, i, reverse):
-            while limit > 0:
-                if reverse == True:
-                    if (
-                        board.actual_position[0] - i == self.pieces_position[0]
-                        and letters_in_board[board.actual_position[1]] - i
-                        == letters_in_board[self.pieces_position[1]]
-                    ):
-                        return True
-                    if (
-                        board.actual_position[0] - i == self.pieces_position[0]
-                        and letters_in_board[board.actual_position[1]] + i
-                        == letters_in_board[self.pieces_position[1]]
-                    ):
-                        return True
+            if (
+                letters_in_board[board.actual_position[1]] + i
+                == letters_in_board[self.pieces_position[1]]
+                and self.pieces_position[0] == board.actual_position[0]
+            ):
+                return True
+            i += 1
+            limit -= 1
+
+    def lineal_movement(self, limit, i, reverse):
+        if (
+            self.piece_types == "pawn"
+            and board.search_of_pieces(
+                self.pieces_position, all_positions_of_pieces, self.opposite_color
+            )
+            == None
+        ):
+            return
+        while limit > 0:
+            if reverse == True:
+
                 if (
-                    board.actual_position[0] + i == self.pieces_position[0]
-                    and letters_in_board[board.actual_position[1]] + i
-                    == letters_in_board[self.pieces_position[1]]
-                ):
-                    return True
-                if (
-                    board.actual_position[0] + i == self.pieces_position[0]
+                    board.actual_position[0] - i == self.pieces_position[0]
                     and letters_in_board[board.actual_position[1]] - i
                     == letters_in_board[self.pieces_position[1]]
                 ):
                     return True
-                """ print(
-                    board.actual_position[0] + i,
-                    self.pieces_position[0],
-                    letters_in_board[board.actual_position[1]] + i,
-                    letters_in_board[self.pieces_position[1]],
-                )"""
-                i += 1
-                limit -= 1
 
-        def horse_movement():
-            value_1 = board.actual_position[0] - self.pieces_position[0]
-            if value_1 < 0:
-                value_1 *= -1
-            value_2 = (
+                if (
+                    board.actual_position[0] - i == self.pieces_position[0]
+                    and letters_in_board[board.actual_position[1]] + i
+                    == letters_in_board[self.pieces_position[1]]
+                ):
+                    return True
+
+            if (
+                board.actual_position[0] + i == self.pieces_position[0]
+                and letters_in_board[board.actual_position[1]] + i
+                == letters_in_board[self.pieces_position[1]]
+            ):
+                return True
+
+            if (
+                board.actual_position[0] + i == self.pieces_position[0]
+                and letters_in_board[board.actual_position[1]] - i
+                == letters_in_board[self.pieces_position[1]]
+            ):
+                return True
+            i += 1
+            limit -= 1
+
+    def horse_movement(self):
+        self.position_on_x = board.actual_position[0] - self.pieces_position[0]
+        if self.position_on_x < 0:
+            self.position_on_x *= -1
+        self.position_on_y = (
+            letters_in_board[board.actual_position[1]]
+            - letters_in_board[self.pieces_position[1]]
+        )
+        if self.position_on_y < 0:
+            self.position_on_y *= -1
+        if self.position_on_x == 1 and self.position_on_y == 2:
+            return True
+        elif self.position_on_x == 2 and self.position_on_y == 1:
+            return True
+
+    def dont_go_through_pieces(self):
+        if self.piece_types != "horses":
+            self.letter_in_board = list(letters_in_board)
+            self.numbers_between_actual_and_next_on_x = []
+            self.numbers_between_actual_and_next_on_y = []
+            if board.actual_position[0] > self.pieces_position[0]:
+                x = self.pieces_position[0]
+                while x < board.actual_position[0]:
+                    self.numbers_between_actual_and_next_on_x.append(x)
+                    x += 1
+            elif board.actual_position[0] < self.pieces_position[0]:
+                x = board.actual_position[0]
+                while x < self.pieces_position[0]:
+                    self.numbers_between_actual_and_next_on_x.append(x)
+                    x += 1
+
+            if (
                 letters_in_board[board.actual_position[1]]
-                - letters_in_board[self.pieces_position[1]]
-            )
-            if value_2 < 0:
-                value_2 *= -1
-            #  print(value_1, value_2)
-            if value_1 == 1 and value_2 == 2:
-                return True
-            elif value_1 == 2 and value_2 == 1:
-                return True
+                > letters_in_board[self.pieces_position[1]]
+            ):
+                y = letters_in_board[self.pieces_position[1]]
+                while y < letters_in_board[board.actual_position[1]]:
+                    self.numbers_between_actual_and_next_on_y.append(
+                        self.letter_in_board[y - 1]
+                    )
+                    y += 1
+            elif (
+                letters_in_board[board.actual_position[1]]
+                < letters_in_board[self.pieces_position[1]]
+            ):
+                y = letters_in_board[board.actual_position[1]]
+                while y < letters_in_board[self.pieces_position[1]]:
+                    self.numbers_between_actual_and_next_on_y.append(
+                        self.letter_in_board[y - 1]
+                    )
+                    y += 1
+            if len(self.numbers_between_actual_and_next_on_x) == 0:
+                self.numbers_between_actual_and_next_on_x.append(
+                    self.pieces_position[0]
+                )
+            elif len(self.numbers_between_actual_and_next_on_y) == 0:
+                self.numbers_between_actual_and_next_on_y.append(
+                    self.pieces_position[1]
+                )
 
-        # print(self.pieces_position[0] % board.actual_position[0],letters_in_board [self.pieces_position[1]] % letters_in_board[board.actual_position[1]] )
-        valid_movements = {
-            "pawns": [
-                vertical_movement(1, self.pawn, False),
-                lineal_movement(1, self.pawn, False),
-            ],
-            "dame": [
-                vertical_movement(8, 1, True),
-                horizonal_movement(8, 1, True),
-                lineal_movement(8, 1, True),
-            ],
-            "king": [
-                vertical_movement(1, 1, True),
-                horizonal_movement(1, 1, True),
-                lineal_movement(1, 1, True),
-            ],
-            "horses": [horse_movement()],
-            "towers": [horizonal_movement(8, 1, True), vertical_movement(8, 1, True)],
-            "bishops": [lineal_movement(8, 1, True)],
-        }
-        for check in valid_movements[self.piece_type_selected]:
-            if check == True and self.dont_eat_your_team() != False:
-                all_positions_of_pieces[self.color][self.piece_type_selected][
-                    board.indicator - 1
-                ] = self.pieces_position
-                return True
-        # print("Try again,please")
-
-    #  print(valid_movements[self.piece_types])
+            for color in all_positions_of_pieces:
+                for x in self.numbers_between_actual_and_next_on_x:
+                    for y in self.numbers_between_actual_and_next_on_y:
+                        if (
+                            board.search_of_pieces(
+                                [x, y], all_positions_of_pieces, color
+                            )
+                            == True
+                        ):
+                            return False
+            return True
 
     def pieces_behavior(self):
         self.opposite_colors()
-        if self.movement_of_pieces() == True:
-         self.attack_of_pieces()
-         print("Te lo comiste")
-    # return
+        self.valid_movements = {
+            "pawns": [
+                self.vertical_movement(1, self.pawn, False),
+                self.lineal_movement(1, self.pawn, False),
+            ],
+            "dame": [
+                self.vertical_movement(8, 1, True),
+                self.horizonal_movement(8, 1, True),
+                self.lineal_movement(8, 1, True),
+            ],
+            "king": [
+                self.vertical_movement(1, 1, True),
+                self.horizonal_movement(1, 1, True),
+                self.lineal_movement(1, 1, True),
+            ],
+            "horses": [self.horse_movement()],
+            "towers": [
+                self.horizonal_movement(8, 1, True),
+                self.vertical_movement(8, 1, True),
+            ],
+            "bishops": [self.lineal_movement(8, 1, True)],
+        }
+
+        if self.piece_types == self.piece_type_selected:
+            for check in self.valid_movements[self.piece_type_selected]:
+                if (
+                    check == True
+                    and self.dont_eat_your_team() != False
+                    and self.dont_go_through_pieces() == True
+                ):
+                    all_positions_of_pieces[self.color][self.piece_type_selected][
+                        board.indicator - 1
+                    ] = self.pieces_position
+                    return True
+        return

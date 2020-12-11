@@ -3,6 +3,8 @@ from chess_board import letters_in_board
 from chess_board import messages
 from chess_board import board
 from chess_board import Pieces
+def main():
+  print("Hola")
 
 
 turn = 0
@@ -25,3 +27,6 @@ while True:
  dame.pieces_behavior()
  king.pieces_behavior()
  tower.pieces_behavior()
+
+
+ 
