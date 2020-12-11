@@ -3,8 +3,8 @@ from chess_board import letters_in_board
 from chess_board import messages
 from chess_board import board
 from chess_board import Pieces
-def main():
-  print("Hola")
+#def main():
+ # print("Hola")
 
 
 turn = 0

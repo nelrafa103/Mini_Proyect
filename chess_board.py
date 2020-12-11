@@ -235,14 +235,14 @@ class Pieces(Properies):
             limit -= 1
 
     def lineal_movement(self, limit, i, reverse):
-        if (
-            self.piece_types == "pawn"
-            and board.search_of_pieces(
-                self.pieces_position, all_positions_of_pieces, self.opposite_color
-            )
-            == None
-        ):
-            return
+        #if (
+      #      self.piece_types == "pawn"
+      #      and board.search_of_pieces(
+        #        self.pieces_position, all_positions_of_pieces, self.opposite_color
+       #     )
+         #   == None
+      #  ):
+        #    return
         while limit > 0:
             if reverse == True:
 
@@ -380,7 +380,19 @@ class Pieces(Properies):
                     and self.dont_eat_your_team() != False
                     and self.dont_go_through_pieces() == True
                 ):
-                    all_positions_of_pieces[self.color][self.piece_type_selected][
+                   
+                    if self.piece_types == "pawns" and self.valid_movements[self.piece_types][1] == True:
+                     all_positions_of_pieces[self.color][self.piece_type_selected][
+                        board.indicator - 1
+                    ] = self.pieces_position
+                     self.attack_of_pieces()
+                    elif self.piece_types != "pawns":
+                     all_positions_of_pieces[self.color][self.piece_type_selected][
+                        board.indicator - 1
+                     ] = self.pieces_position
+                     self.attack_of_pieces()
+                    elif self.piece_types == "pawns" and self.valid_movements[self.piece_types][0] == True:
+                      all_positions_of_pieces[self.color][self.piece_type_selected][
                         board.indicator - 1
                     ] = self.pieces_position
                     return True
