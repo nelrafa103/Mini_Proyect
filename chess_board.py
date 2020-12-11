@@ -25,7 +25,7 @@ all_positions_of_pieces = {
         ],
         "bishops": [[1, "C"], [1, "F"]],
         "towers": [[1, "A"], [1, "H"]],
-        "horses": [[1, "B"], [2, "G"]],
+        "horses": [[1, "B"], [1, "G"]],
         "king": [[1, "E"]],
         "dame": [[1, "D"]],
     },
@@ -168,6 +168,7 @@ class Pieces(Properies):
             self.pawn = -1
             self.opposite_color = "black"
         self.piece_type_selected = board.pieces_type
+        self.index_indicitor = board.indicator
 
     def dont_eat_your_team(self):
         if (
@@ -213,7 +214,7 @@ class Pieces(Properies):
 
             i += 1
             limit -= 1
-
+        return False
     def horizonal_movement(self, limit, i, reverse):
         while limit > 0:
             if reverse == True:
@@ -233,15 +234,15 @@ class Pieces(Properies):
                 return True
             i += 1
             limit -= 1
-
+        return False
     def lineal_movement(self, limit, i, reverse):
-        #if (
-      #      self.piece_types == "pawn"
-      #      and board.search_of_pieces(
+        # if (
+        #      self.piece_types == "pawn"
+        #      and board.search_of_pieces(
         #        self.pieces_position, all_positions_of_pieces, self.opposite_color
-       #     )
-         #   == None
-      #  ):
+        #     )
+        #   == None
+        #  ):
         #    return
         while limit > 0:
             if reverse == True:
@@ -275,7 +276,7 @@ class Pieces(Properies):
                 return True
             i += 1
             limit -= 1
-
+        return False
     def horse_movement(self):
         self.position_on_x = board.actual_position[0] - self.pieces_position[0]
         if self.position_on_x < 0:
@@ -290,7 +291,7 @@ class Pieces(Properies):
             return True
         elif self.position_on_x == 2 and self.position_on_y == 1:
             return True
-
+        return False
     def dont_go_through_pieces(self):
         if self.piece_types != "horses":
             self.letter_in_board = list(letters_in_board)
@@ -302,7 +303,7 @@ class Pieces(Properies):
                     self.numbers_between_actual_and_next_on_x.append(x)
                     x += 1
             elif board.actual_position[0] < self.pieces_position[0]:
-                x = board.actual_position[0]
+                x = board.actual_position[0] + 1
                 while x < self.pieces_position[0]:
                     self.numbers_between_actual_and_next_on_x.append(x)
                     x += 1
@@ -321,7 +322,7 @@ class Pieces(Properies):
                 letters_in_board[board.actual_position[1]]
                 < letters_in_board[self.pieces_position[1]]
             ):
-                y = letters_in_board[board.actual_position[1]]
+                y = letters_in_board[board.actual_position[1]] + 1
                 while y < letters_in_board[self.pieces_position[1]]:
                     self.numbers_between_actual_and_next_on_y.append(
                         self.letter_in_board[y - 1]
@@ -343,7 +344,7 @@ class Pieces(Properies):
                             board.search_of_pieces(
                                 [x, y], all_positions_of_pieces, color
                             )
-                            == True
+                            == True and [x,y] != self.pieces_position
                         ):
                             return False
             return True
@@ -372,28 +373,32 @@ class Pieces(Properies):
             ],
             "bishops": [self.lineal_movement(8, 1, True)],
         }
-
         if self.piece_types == self.piece_type_selected:
-            for check in self.valid_movements[self.piece_type_selected]:
+            # print("Hay algo malo")
+            #  print(self.valid_movements["pawns"][0], board.indicator,self.color)
+            print(self.dont_eat_your_team())
+            print(self.dont_go_through_pieces())
+            for check in self.valid_movements[self.piece_types]:
+                print(self.valid_movements[self.piece_types])
                 if (
                     check == True
                     and self.dont_eat_your_team() != False
                     and self.dont_go_through_pieces() == True
                 ):
-                   
-                    if self.piece_types == "pawns" and self.valid_movements[self.piece_types][1] == True:
-                     all_positions_of_pieces[self.color][self.piece_type_selected][
-                        board.indicator - 1
-                    ] = self.pieces_position
-                     self.attack_of_pieces()
+                    #   print(self.piece_types)
+                    if self.piece_types == "pawns":
+                       
+                        #    print(board.indicator,self.color)
+                        if self.valid_movements[self.piece_types][1] == True:
+                            self.attack_of_pieces()
+                            print("Done!")
+                        all_positions_of_pieces[self.color][self.piece_types][
+                            self.index_indicitor
+                        ] = self.pieces_position
                     elif self.piece_types != "pawns":
-                     all_positions_of_pieces[self.color][self.piece_type_selected][
-                        board.indicator - 1
-                     ] = self.pieces_position
-                     self.attack_of_pieces()
-                    elif self.piece_types == "pawns" and self.valid_movements[self.piece_types][0] == True:
-                      all_positions_of_pieces[self.color][self.piece_type_selected][
-                        board.indicator - 1
-                    ] = self.pieces_position
+                        all_positions_of_pieces[self.color][self.piece_types][
+                            self.index_indicitor
+                        ] = self.pieces_position
+                        self.attack_of_pieces()
                     return True
         return
