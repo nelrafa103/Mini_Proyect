@@ -215,6 +215,7 @@ class Pieces(Properies):
             i += 1
             limit -= 1
         return False
+
     def horizonal_movement(self, limit, i, reverse):
         while limit > 0:
             if reverse == True:
@@ -235,6 +236,7 @@ class Pieces(Properies):
             i += 1
             limit -= 1
         return False
+
     def lineal_movement(self, limit, i, reverse):
         # if (
         #      self.piece_types == "pawn"
@@ -277,6 +279,7 @@ class Pieces(Properies):
             i += 1
             limit -= 1
         return False
+
     def horse_movement(self):
         self.position_on_x = board.actual_position[0] - self.pieces_position[0]
         if self.position_on_x < 0:
@@ -292,6 +295,7 @@ class Pieces(Properies):
         elif self.position_on_x == 2 and self.position_on_y == 1:
             return True
         return False
+
     def dont_go_through_pieces(self):
         if self.piece_types != "horses":
             self.letter_in_board = list(letters_in_board)
@@ -344,7 +348,8 @@ class Pieces(Properies):
                             board.search_of_pieces(
                                 [x, y], all_positions_of_pieces, color
                             )
-                            == True and [x,y] != self.pieces_position
+                            == True
+                            and [x, y] != self.pieces_position
                         ):
                             return False
             return True
@@ -387,7 +392,7 @@ class Pieces(Properies):
                 ):
                     #   print(self.piece_types)
                     if self.piece_types == "pawns":
-                       
+
                         #    print(board.indicator,self.color)
                         if self.valid_movements[self.piece_types][1] == True:
                             self.attack_of_pieces()

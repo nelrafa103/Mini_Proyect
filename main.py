@@ -12,21 +12,21 @@ while True:
  turn += 1
  messages.menu()
  board.board_behavior(all_positions_of_pieces,turn)
- pawn = Pieces(board.next_position, board.color, "pawns")
- horse = Pieces(board.next_position, board.color, "horses")
- bishop = Pieces(board.next_position, board.color, "bishops")
- dame = Pieces(board.next_position, board.color, "dame")
+ #pawn = Pieces(board.next_position, board.color, "pawns")
+ #horse = Pieces(board.next_position, board.color, "horses")
+ #bishop = Pieces(board.next_position, board.color, "bishops")
+ #dame = Pieces(board.next_position, board.color, "dame")
  king = Pieces(board.next_position, board.color, "king")
- tower = Pieces(board.next_position, board.color, "towers")
+ #tower = Pieces(board.next_position, board.color, "towers")
 
 
 
- pawn.pieces_behavior()
- bishop.pieces_behavior()
- horse.pieces_behavior()
- dame.pieces_behavior()
+ #pawn.pieces_behavior()
+ #bishop.pieces_behavior()
+ #horse.pieces_behavior()
+ #dame.pieces_behavior()
  king.pieces_behavior()
- tower.pieces_behavior()
+# tower.pieces_behavior()
 
 
  
