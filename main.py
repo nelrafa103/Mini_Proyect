@@ -1,16 +1,32 @@
-from chess_chips import Play
+from chess_board import all_positions_of_pieces
 from chess_board import letters_in_board
-from chess_board import values_of_chips
-import turtle
+from chess_board import messages
+from chess_board import board
+from chess_board import Pieces
+#def main():
+ # print("Hola")
 
-boolean = True
-play_1 = Play()
-count = 1
-while boolean:
- #  try:
-      
-      play_1.play_case_1(count)
-      #print(5%10)
-      count += 1
-   #except: 
-   # continue
+
+turn = 0
+while True:
+ turn += 1
+ messages.menu()
+ board.board_behavior(all_positions_of_pieces,turn)
+ #pawn = Pieces(board.next_position, board.color, "pawns")
+ #horse = Pieces(board.next_position, board.color, "horses")
+ #bishop = Pieces(board.next_position, board.color, "bishops")
+ #dame = Pieces(board.next_position, board.color, "dame")
+ king = Pieces(board.next_position, board.color, "king")
+ #tower = Pieces(board.next_position, board.color, "towers")
+
+
+
+ #pawn.pieces_behavior()
+ #bishop.pieces_behavior()
+ #horse.pieces_behavior()
+ #dame.pieces_behavior()
+ king.pieces_behavior()
+# tower.pieces_behavior()
+
+
+ 
